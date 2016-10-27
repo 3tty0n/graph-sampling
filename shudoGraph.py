@@ -45,6 +45,26 @@ class ShudoGraph:
         values = self.graph.degree().values()
         return sum(values) / len(values)
 
+    def degree_distribution(self):
+        degree_sequence=sorted(nx.degree(graph).values(),reverse=True)
+        dmax = max(degree_sequence)
+
+        plt.loglog(degree_sequence,'b-',marker='o')
+        plt.title("Degree rank plot")
+        plt.ylabel("degree")
+        plt.xlabel("rank")
+
+        plt.axes([0.45,0.45,0.45,0.45])
+        Gcc=sorted(nx.connected_component_subgraphs(G), key = len, reverse=True)[0]
+        pos=nx.spring_layout(Gcc)
+        plt.axis('off')
+        nx.draw_networkx_nodes(Gcc,pos,node_size=20)
+        nx.draw_networkx_edges(Gcc,pos,alpha=0.4)
+
+        plt.savefig("degree_histogram.png")
+        plt.show()
+
+
 if __name__ == '__main__':
     G = nx.Graph()
     G.add_edges_from([(1, 2), (2, 3), (2, 4), (3, 4)])
@@ -54,3 +74,6 @@ if __name__ == '__main__':
     print g.cluster_coefficient_node(3)
     print g.average_degree()
 
+    G = nx.gnp_random_graph(100,0.02)
+    g = ShudoGraph(10, G)
+    g.degree_distribution()
