@@ -7,7 +7,7 @@ import random
 
 
 # 完全グラフを計算する
-def complete_graph(graph, n):
+def complete_graph(n):
     G = nx.Graph()
     if n > 1:
         if G.is_directed():
@@ -20,7 +20,7 @@ def complete_graph(graph, n):
 
 # 完全グラフを表示する
 def complete_graph_show(graph, n):
-    G = self.complete_graph(n)
+    G = graph.complete_graph(n)
     pos = nx.circular_layout(G)
     nx.draw_networkx(G, pos)
     plt.show()
@@ -43,8 +43,8 @@ def average_degree(graph):
 
 
 # 次数分布のグラフを表示する
-def degree_distribution_show():
-    degree_sequence = sorted(nx.degree(self.G).values(), reverse=True)
+def degree_distribution_show(graph):
+    degree_sequence = sorted(nx.degree(graph).values(), reverse=True)
 
     plt.loglog(degree_sequence, 'b-', marker='o')
     plt.title("Degree rank plot")
@@ -52,7 +52,7 @@ def degree_distribution_show():
     plt.xlabel("rank")
 
     plt.axes([0.45, 0.45, 0.45, 0.45])
-    Gcc = sorted(nx.connected_component_subgraphs(self.G), key=len, reverse=True)[0]
+    Gcc = sorted(nx.connected_component_subgraphs(graph), key=len, reverse=True)[0]
     pos = nx.spring_layout(Gcc)
     plt.axis('off')
     nx.draw_networkx_nodes(Gcc, pos, node_size=20)
@@ -131,7 +131,7 @@ def sampling():
     # print list(random_walk(graph=G, start_node=1, size=10, metropolized=True))
 
     G2 = nx.read_edgelist("data/input/BA10000.txt", nodetype=int)
-    print random_walk_sampling(graph=G2, size=100000, metropolized=True)
+    print(random_walk_sampling(graph=G2, size=100000, metropolized=True))
 
 
 if __name__ == '__main__':
