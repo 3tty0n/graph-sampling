@@ -1,5 +1,6 @@
 # coding=utf-8
 
+from typing import *
 import itertools
 import networkx as nx
 import numpy as np
@@ -7,7 +8,7 @@ import matplotlib.pyplot as plt
 import random
 
 
-def complete_graph(n):
+def complete_graph(n) -> nx.Graph:
     """
     完全グラフを計算する
 
@@ -49,7 +50,7 @@ def cluster_coefficient_node(graph, v):
     return nx.clustering(graph, v)
 
 
-def cluster_coefficient_average(graph):
+def cluster_coefficient_average(graph) -> float:
     """
     graphの平均クラスタ係数を求める
     :param graph: グラフ
@@ -58,15 +59,14 @@ def cluster_coefficient_average(graph):
     return nx.average_clustering(graph)
 
 
-def average_degree(graph):
+def average_degree(graph) -> float:
     """
     graphの平均次数を求める
     :param graph: グラフ
     :return: 平均次数
     """
     values = graph.degree().values()
-    data = np.array(values)
-    return np.average(data)
+    return sum(values) / len(values)
 
 
 # 次数分布のグラフを表示する
@@ -94,7 +94,7 @@ def degree_distribution_show(graph):
     plt.show()
 
 
-def bfs(graph, start, end):
+def bfs(graph, start, end) -> List[int]:
     """
     graphを幅優先探索する
 
@@ -123,7 +123,7 @@ def bfs(graph, start, end):
 
 
 # RWでサンプリングしたノード列を返す
-def random_walk(graph, start_node=None, size=-1, metropolized=False):
+def random_walk(graph, start_node=None, size=-1, metropolized=False) -> List[int]:
     """
     RWでサンプリングしたノード列を返す
 
@@ -150,7 +150,7 @@ def random_walk(graph, start_node=None, size=-1, metropolized=False):
 
 
 # RWでサンプリングしたグラフの平均クラスタ係数を求める
-def random_walk_sampling(graph, start_node=None, size=-1, metropolized=False):
+def random_walk_sampling(graph, start_node=None, size=-1, metropolized=False) -> List[int]:
     """
     RWでサンプリングしたグラフの平均クラスタ係数を返す
 
@@ -171,7 +171,7 @@ def random_walk_sampling(graph, start_node=None, size=-1, metropolized=False):
     return cluster_coefficient_average(graph)
 
 
-def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False):
+def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False) -> List[int]:
     """
     RW, MHRWでサンプリングしたノード列について、クラスタ係数を100回計算し、
     その平均と分散を返す
@@ -233,9 +233,9 @@ def youtube_sampling_show(size):
 def sampling():
     G = nx.Graph()
     G.add_edges_from([(1, 2), (1, 3), (1, 4), (2, 5), (2, 6), (4, 7), (4, 8), (5, 9), (5, 10), (7, 11), (7, 12)])
-    print(nx.bfs_successors(G, 1))
-    print(list(random_walk(graph=G, start_node=1, size=10, metropolized=True)))
+    print(average_degree(G))
+    print(list(random_walk(graph=G, size=10)))
 
 
 if __name__ == '__main__':
-    youtube_sampling_show(1000)
+    sampling()
