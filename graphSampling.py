@@ -150,7 +150,7 @@ def random_walk(graph, start_node=None, size=-1, metropolized=False) -> List[int
 
 
 # RWでサンプリングしたグラフの平均クラスタ係数を求める
-def random_walk_sampling(graph, start_node=None, size=-1, metropolized=False) -> List[int]:
+def random_walk_sampling_cca(graph, start_node=None, size=-1, metropolized=False) -> List[int]:
     """
     RWでサンプリングしたグラフの平均クラスタ係数を返す
 
@@ -187,7 +187,7 @@ def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False)
 
     cluster_coefficient_average_result = []
     for i in range(1, 100):
-        cluster_coefficient_average_result.append(random_walk_sampling(graph, start_node, size, metropolized))
+        cluster_coefficient_average_result.append(random_walk_sampling_cca(graph, start_node, size, metropolized))
 
     data = np.array(cluster_coefficient_average_result)
     average = np.average(data)
@@ -210,13 +210,13 @@ def ba10000_show():
 def twitter_sampling():
     G = nx.read_edgelist("data/input/twitter_combined.txt", nodetype=int)
     print(cluster_coefficient_average(G))
-    print(random_walk_sampling(graph=G, size=100000, metropolized=True))
+    print(random_walk_sampling_cca(graph=G, size=100000, metropolized=True))
     print(random_walk_aggregation(graph=G, size=10000, metropolized=True))
 
 
 def youtube_sampling():
     G = nx.read_edgelist("data/input/com-youtube.ungraph.txt", nodetype=int)
-    print(random_walk_sampling(graph=G, size=10000))
+    print(random_walk_sampling_cca(graph=G, size=10000))
     print(random_walk_aggregation(graph=G, size=10000, metropolized=False))
 
 
@@ -230,6 +230,11 @@ def youtube_sampling_show(size):
     plt.show()
 
 
+def amazon_sampling():
+    G = nx.read_edgelist("data/input/com-amazon.ungraph.txt")
+    print(cluster_coefficient_average(G))
+
+
 def sampling():
     G = nx.Graph()
     G.add_edges_from([(1, 2), (1, 3), (1, 4), (2, 5), (2, 6), (4, 7), (4, 8), (5, 9), (5, 10), (7, 11), (7, 12)])
@@ -238,4 +243,4 @@ def sampling():
 
 
 if __name__ == '__main__':
-    sampling()
+    amazon_sampling()
