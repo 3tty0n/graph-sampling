@@ -130,7 +130,8 @@ def sampling():
     # print nx.bfs_successors(G, 1)
     # print list(random_walk(graph=G, start_node=1, size=10, metropolized=True))
 
-    G2 = nx.read_edgelist("data/input/BA10000.txt", nodetype=int)
+    G2 = nx.read_edgelist("data/input/twitter_combined.txt", nodetype=int)
+    print(cluster_coefficient_average(G2))
     print(random_walk_sampling(graph=G2, size=100000, metropolized=True))
 
 
