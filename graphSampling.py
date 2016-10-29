@@ -1,11 +1,13 @@
 # coding=utf-8
 
 from typing import *
+
 import itertools
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 import random
+import simplejson as json
 
 
 def complete_graph(n) -> nx.Graph:
@@ -39,7 +41,7 @@ def complete_graph_show(graph, n):
     plt.show()
 
 
-def cluster_coefficient_node(graph, v):
+def cluster_coefficient_node(graph, v) -> float:
     """
     graphのあるノードvのクラスタ係数を求める
 
@@ -67,31 +69,6 @@ def average_degree(graph) -> float:
     """
     values = graph.degree().values()
     return sum(values) / len(values)
-
-
-# 次数分布のグラフを表示する
-def degree_distribution_show(graph):
-    """
-    graphの次数分布のグラフを描画する
-    :param graph: グラフ
-    :return:
-    """
-    degree_sequence = sorted(nx.degree(graph).values(), reverse=True)
-
-    plt.loglog(degree_sequence, 'b-', marker='o')
-    plt.title("Degree rank plot")
-    plt.ylabel("degree")
-    plt.xlabel("rank")
-
-    plt.axes([0.45, 0.45, 0.45, 0.45])
-    Gcc = sorted(nx.connected_component_subgraphs(graph), key=len, reverse=True)[0]
-    pos = nx.spring_layout(Gcc)
-    plt.axis('off')
-    nx.draw_networkx_nodes(Gcc, pos, node_size=20)
-    nx.draw_networkx_edges(Gcc, pos, alpha=0.4)
-
-    plt.savefig("degree_histogram.png")
-    plt.show()
 
 
 def bfs(graph, start, end) -> List[int]:
@@ -122,7 +99,6 @@ def bfs(graph, start, end) -> List[int]:
     return visited
 
 
-# RWでサンプリングしたノード列を返す
 def random_walk(graph, start_node=None, size=-1, metropolized=False) -> List[int]:
     """
     RWでサンプリングしたノード列を返す
@@ -149,7 +125,6 @@ def random_walk(graph, start_node=None, size=-1, metropolized=False) -> List[int
         yield v
 
 
-# RWでサンプリングしたグラフの平均クラスタ係数を求める
 def random_walk_sampling_cca(graph, start_node=None, size=-1, metropolized=False) -> List[int]:
     """
     RWでサンプリングしたグラフの平均クラスタ係数を返す
@@ -193,54 +168,3 @@ def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False)
     average = np.average(data)
     var = np.var(data)
     return {"average": average, "var": var}
-
-
-def ba10000_show():
-    """
-    BA10000.txtを読み込んでグラフを表示する
-    :return:
-    """
-    G = nx.read_edgelist("data/input/BA10000.txt", nodetype=int)
-    pos = {}
-    nx.draw(G, pos)
-    plt.savefig("data/output/test_graph.png")
-    plt.show()
-
-
-def twitter_sampling():
-    G = nx.read_edgelist("data/input/twitter_combined.txt", nodetype=int)
-    print(cluster_coefficient_average(G))
-    print(random_walk_sampling_cca(graph=G, size=100000, metropolized=True))
-    print(random_walk_aggregation(graph=G, size=10000, metropolized=True))
-
-
-def youtube_sampling():
-    G = nx.read_edgelist("data/input/com-youtube.ungraph.txt", nodetype=int)
-    print(random_walk_sampling_cca(graph=G, size=10000))
-    print(random_walk_aggregation(graph=G, size=10000, metropolized=False))
-
-
-def youtube_sampling_show(size):
-    G = nx.read_edgelist("data/input/com-youtube.ungraph.txt", nodetype=int)
-    nodes = list(random_walk(graph=G, size=size))
-    graph = nx.Graph()
-    graph.add_path(nodes)
-    nx.draw_random(G=graph)
-    plt.savefig("data/output/youtube_rw" + str(size) + ".png")
-    plt.show()
-
-
-def amazon_sampling():
-    G = nx.read_edgelist("data/input/com-amazon.ungraph.txt")
-    print(cluster_coefficient_average(G))
-
-
-def sampling():
-    G = nx.Graph()
-    G.add_edges_from([(1, 2), (1, 3), (1, 4), (2, 5), (2, 6), (4, 7), (4, 8), (5, 9), (5, 10), (7, 11), (7, 12)])
-    print(average_degree(G))
-    print(list(random_walk(graph=G, size=10)))
-
-
-if __name__ == '__main__':
-    amazon_sampling()
