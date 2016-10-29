@@ -4,10 +4,7 @@ from networkx.readwrite import json_graph
 
 import graphSampling as gs
 import networkx as nx
-import numpy as np
 import matplotlib.pyplot as plt
-import random
-import simplejson as json
 
 
 def ba10000_show():
