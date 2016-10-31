@@ -1,8 +1,7 @@
 # coding=utf-8
 
 from networkx.readwrite import json_graph
-
-import graphSampling as gs
+import graph_sampling as gs
 import networkx as nx
 import matplotlib.pyplot as plt
 
