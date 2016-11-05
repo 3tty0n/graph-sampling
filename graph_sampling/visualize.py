@@ -6,14 +6,14 @@ from networkx.readwrite import json_graph
 import util
 import flask
 
-G = nx.read_edgelist('data/input/twitter_combined.txt')
+G = nx.read_edgelist('../data/input/twitter_combined.txt')
 edges = list(util.random_walk(graph=G, size=1000, metropolized=True))
 G1 = nx.Graph()
 G1.add_path(edges)
 for n in G1:
     G1.node[n]['name'] = n
 d = json_graph.node_link_data(G1)
-json.dump(d, open('graph_sampling/visualize/visualize.json','w'))
+json.dump(d, open('./visualize/visualize.json','w'))
 print('Wrote node-link JSON data to visualize/visualize.json')
 
 app = flask.Flask(__name__, static_folder="visualize")
