@@ -90,7 +90,7 @@ def degree_distribution_plot():
     plt.xscale('log')
     plt.ylabel('Freq')
     plt.xlabel('Degree')
-    plt.savefig('data/output/emain-Enron_distribution.eps')
+    plt.savefig('data/output/emain-Enron_distribution.png')
     plt.show()
 
 
