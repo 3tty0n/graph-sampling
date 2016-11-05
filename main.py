@@ -1,7 +1,7 @@
 # coding=utf-8
 
 from networkx.readwrite import json_graph
-import graph_sampling as gs
+import util as gs
 import networkx as nx
 import matplotlib.pyplot as plt
 
@@ -19,6 +19,10 @@ def ba10000_show():
 
 
 def twitter_sampling():
+    """
+    twitter のグラフを用いてサンプリングする
+    :return:
+    """
     G = nx.read_edgelist("data/input/twitter_combined.txt", nodetype=int)
     print(gs.cluster_coefficient_average(G))
     print(gs.random_walk_sampling_cca(graph=G, size=100000, metropolized=True))
@@ -26,12 +30,21 @@ def twitter_sampling():
 
 
 def youtube_sampling():
+    """
+    youtube のグラフを用いてサンプリングする
+    :return:
+    """
     G = nx.read_edgelist("data/input/com-youtube.ungraph.txt", nodetype=int)
     print(gs.random_walk_sampling_cca(graph=G, size=10000))
     print(gs.random_walk_aggregation(graph=G, size=10000, metropolized=False))
 
 
 def youtube_sampling_show(size):
+    """
+    youtube のグラフをサンプリングし、それを画像として出力する
+    :param size:
+    :return:
+    """
     G = nx.read_edgelist("data/input/com-youtube.ungraph.txt", nodetype=int)
     nodes = list(gs.random_walk(graph=G, size=size))
     graph = nx.Graph()
@@ -42,6 +55,10 @@ def youtube_sampling_show(size):
 
 
 def amazon_sampling():
+    """
+    amazon のグラフをサンプリングする
+    :return:
+    """
     G = nx.read_edgelist("data/input/com-amazon.ungraph.txt")
     graph = nx.Graph()
     nodes = gs.random_walk(graph=G, size=10000)
@@ -52,6 +69,10 @@ def amazon_sampling():
 
 
 def sampling():
+    """
+    単純なグラフをサンプリングする
+    :return:
+    """
     G = nx.Graph()
     G.add_edges_from([(1, 2), (1, 3), (1, 4), (2, 5), (2, 6), (4, 7), (4, 8), (5, 9), (5, 10), (7, 11), (7, 12)])
     print(gs.cluster_coefficient_node(G, 2))
@@ -59,5 +80,19 @@ def sampling():
     print(list(gs.random_walk(graph=G, size=10)))
 
 
+def degree_distribution_plot():
+    """ Plot Distribution """
+    G = nx.read_edgelist("data/input/email-Enron.txt", nodetype=int, create_using=nx.DiGraph())
+    indegree, outdegree = gs.degree_distribution(G)
+
+    plt.plot(range(len(indegree)),indegree,'bo')
+    plt.yscale('log')
+    plt.xscale('log')
+    plt.ylabel('Freq')
+    plt.xlabel('Degree')
+    plt.savefig('data/output/_distribution.eps')
+    plt.show()
+
+
 if __name__ == "__main__":
-    sampling()
+    degree_distribution_plot()

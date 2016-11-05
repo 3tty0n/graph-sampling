@@ -169,17 +169,20 @@ def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False)
     return {"average": average, "var": var}
 
 
-def degee_distribution(graph):
+def degree_distribution(graph):
     """
     次数分布
 
     :param graph: nx.Graph
-    :return:
+    :return: indegree_distribution, outdegree_distribution
     """
     M = nx.to_scipy_sparse_matrix(graph)
 
     indegrees = M.sum(0).A[0]
     outdegrees = M.sum(1).T.A[0]
+    # ノードに入ってくる辺数
     indegree_distribution = np.bincount(indegrees)
+    # ノードから出ていく辺数
     outdegree_distribution = np.bincount(outdegrees)
+    return indegree_distribution, outdegree_distribution
 
