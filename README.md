@@ -1,1 +1,1 @@
-# graph-sampling
+# graph_sampling
