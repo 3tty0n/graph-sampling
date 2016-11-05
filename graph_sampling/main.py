@@ -82,7 +82,7 @@ def sampling():
 
 def degree_distribution_plot():
     """ Plot Distribution """
-    G = nx.read_edgelist("data/input/email-Enron.txt", nodetype=int, create_using=nx.DiGraph())
+    G = nx.read_edgelist("data/input/com-amazon.ungraph.txt", nodetype=int, create_using=nx.DiGraph())
     indegree, outdegree = gs.degree_distribution(G)
 
     plt.plot(range(len(indegree)),indegree,'bo')
@@ -90,7 +90,7 @@ def degree_distribution_plot():
     plt.xscale('log')
     plt.ylabel('Freq')
     plt.xlabel('Degree')
-    plt.savefig('data/output/_distribution.eps')
+    plt.savefig('data/output/emain-Enron_distribution.eps')
     plt.show()
 
 
