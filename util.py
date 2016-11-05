@@ -167,3 +167,19 @@ def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False)
     average = np.average(data)
     var = np.var(data)
     return {"average": average, "var": var}
+
+
+def degee_distribution(graph):
+    """
+    次数分布
+
+    :param graph: nx.Graph
+    :return:
+    """
+    M = nx.to_scipy_sparse_matrix(graph)
+
+    indegrees = M.sum(0).A[0]
+    outdegrees = M.sum(1).T.A[0]
+    indegree_distribution = np.bincount(indegrees)
+    outdegree_distribution = np.bincount(outdegrees)
+
