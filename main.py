@@ -6,7 +6,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 
-def ba10000_show():
+def ba10000_plot():
     """
     BA10000.txtを読み込んでグラフを表示する
     :return:
@@ -39,7 +39,7 @@ def youtube_sampling():
     print(gs.random_walk_aggregation(graph=G, size=10000, metropolized=False))
 
 
-def youtube_sampling_show(size):
+def youtube_sampling_plot(size):
     """
     youtube のグラフをサンプリングし、それを画像として出力する
     :param size:
