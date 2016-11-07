@@ -9,7 +9,7 @@ import flask
 
 def create_json_from_file(file):
     G = nx.read_edgelist('../data/input/' + file + '.txt')
-    edges = list(util.random_walk(graph=G, size=1000, metropolized=True))
+    edges = list(util.random_walk(graph=G, size=2000, metropolized=False))
     G1 = nx.Graph()
     G1.add_path(edges)
     for n in G1:
@@ -26,39 +26,31 @@ graphs.append({"name": "twitter_combined",
 graphs.append({"name": "com-amazon.ungraph",
                "url": "/static/com-amazon.ungraph.html",
                "generateUrl": "api/amazon"})
-graphs.append({"name": "com-youtube.ungraph",
-               "url": "/static/com-youtube.ungraph.html",
-               "generateUrl": "api/youtube"})
+
 
 app = flask.Flask(__name__)
 app.config['DEBUG'] = True
 
 
 @app.route('/')
-def hello():
+def index():
     return flask.render_template('index.html',
                                  title="Forced-layout Visualization",
-                                 subtitle="built with flask.",
+                                 subtitle="built with flask, NetworkX and D3.js.",
                                  github='https://github.com/3tty0n/graph_sampling',
                                  graphs=graphs)
 
 
 @app.route('/api/twitter')
 def twitter():
-    create_json_from_file("twitter_combined")
-    return app.send_static_file('/static/twitter_combined.html')
+    create_json_from_file('twitter_combined')
+    return flask.redirect(flask.url_for('index'))
 
 
 @app.route('/api/amazon')
 def amazon():
     create_json_from_file("com-amazon.ungraph")
-    return app.send_static_file('/static/com-amazon.ungraph.html')
-
-
-@app.route('/api/youtube')
-def youtube():
-    create_json_from_file('com-youtube.ungraph')
-    return app.send_static_file('/static/com-youtube.ungraph.html')
+    return flask.redirect(flask.url_for('index'))
 
 
 if __name__ == '__main__':
