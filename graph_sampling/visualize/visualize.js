@@ -1,5 +1,5 @@
 var w = 800,
-    h = 800,
+    h = 600,
     fill = d3.scale.category20();
 
 var vis = d3.select("#chart")
@@ -7,14 +7,15 @@ var vis = d3.select("#chart")
     .attr("width", w)
     .attr("height", h);
 
-d3.json("visualize.json", function(json) {
+d3.json("visualize.json", function(error, json) {
+    if (error) throw error;
 
     var force = d3.layout.force()
         .nodes(json.nodes)
         .links(json.links)
         .size([w, h])
-        .gravity(0.1)
         .charge(-30)
+        .gravity(0.1)
         .start();
 
     var link = vis.selectAll("line.link")
@@ -40,7 +41,7 @@ d3.json("visualize.json", function(json) {
     node.append("svg:title")
         .text(function(d) { return d.name; });
 
-    vis.style("opacity", 1e-6)
+    vis.style("opacity", 1e-5)
         .transition()
         .duration(1000)
         .style("opacity", 1);

@@ -7,7 +7,7 @@ import util
 import flask
 
 G = nx.read_edgelist('../data/input/twitter_combined.txt')
-edges = list(util.random_walk(graph=G, size=2000, metropolized=True))
+edges = list(util.random_walk(graph=G, size=1000, metropolized=True))
 G1 = nx.Graph()
 G1.add_path(edges)
 for n in G1:
