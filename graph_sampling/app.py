@@ -19,42 +19,48 @@ def create_json_from_file(file):
     print('Wrote node-link JSON data to static/' + file + '.json')
 
 
+graphs = list()
+graphs.append({"name": "twitter_combined",
+               "url": "/static/twitter_combined.html",
+               "generateUrl": "/api/twitter",})
+graphs.append({"name": "com-amazon.ungraph",
+               "url": "/static/com-amazon.ungraph.html",
+               "generateUrl": "api/amazon"})
+graphs.append({"name": "com-youtube.ungraph",
+               "url": "/static/com-youtube.ungraph.html",
+               "generateUrl": "api/youtube"})
+
 app = flask.Flask(__name__)
+app.config['DEBUG'] = True
 
 
 @app.route('/')
-def root():
-    return app.send_static_file('static/index.html')
-
-
-@app.route('/view/amazon')
-def view_amazon():
-    return app.send_static_file('static/com-amazon.ungraph.html')
-
-
-@app.route('/view/twitter')
-def view_twitter():
-    return app.send_static_file('static/twitter_combined.html')
+def hello():
+    return flask.render_template('index.html',
+                                 title="Forced-layout Visualization",
+                                 subtitle="built with flask.",
+                                 github='https://github.com/3tty0n/graph_sampling',
+                                 graphs=graphs)
 
 
 @app.route('/api/twitter')
 def twitter():
     create_json_from_file("twitter_combined")
-    # return app.send_static_file('visualize/twitter_combined.html')
+    return app.send_static_file('/static/twitter_combined.html')
 
 
 @app.route('/api/amazon')
 def amazon():
     create_json_from_file("com-amazon.ungraph")
-    # return app.send_static_file('visualize/com-amazon.ungraph.html')
+    return app.send_static_file('/static/com-amazon.ungraph.html')
 
 
 @app.route('/api/youtube')
 def youtube():
     create_json_from_file('com-youtube.ungraph')
+    return app.send_static_file('/static/com-youtube.ungraph.html')
 
 
 if __name__ == '__main__':
-    print('\nGo to http://localhost:8010 to see the example\n')
-    print('\nStatic html page: http://localhost:8010')
-    app.run(port=8010)
+    print('\nGo to http://localhost:5000 to see the example\n')
+    app.run()
