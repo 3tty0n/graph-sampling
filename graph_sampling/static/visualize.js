@@ -1,7 +1,7 @@
 function visualizeGraph(name) {
 
     var w = 800,
-        h = 600,
+        h = 800,
         fill = d3.scale.category20();
 
     var vis = d3.select("#chart")
