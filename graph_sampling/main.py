@@ -11,10 +11,10 @@ def ba10000_plot():
     BA10000.txtを読み込んでグラフを表示する
     :return:
     """
-    G = nx.read_edgelist("data/input/BA10000.txt", nodetype=int)
+    G = nx.read_edgelist("../data/input/BA10000.txt", nodetype=int)
     pos = {}
     nx.draw(G, pos)
-    plt.savefig("data/output/test_graph.png")
+    plt.savefig("../data/output/test_graph.png")
     plt.show()
 
 
@@ -23,7 +23,7 @@ def twitter_sampling():
     twitter のグラフを用いてサンプリングする
     :return:
     """
-    G = nx.read_edgelist("data/input/twitter_combined.txt", nodetype=int)
+    G = nx.read_edgelist("../data/input/twitter_combined.txt", nodetype=int)
     print(gs.cluster_coefficient_average(G))
     print(gs.random_walk_sampling_cca(graph=G, size=100000, metropolized=True))
     print(gs.random_walk_aggregation(graph=G, size=10000, metropolized=True))
@@ -34,7 +34,7 @@ def youtube_sampling():
     youtube のグラフを用いてサンプリングする
     :return:
     """
-    G = nx.read_edgelist("data/input/com-youtube.ungraph.txt", nodetype=int)
+    G = nx.read_edgelist("../data/input/com-youtube.ungraph.txt", nodetype=int)
     print(gs.random_walk_sampling_cca(graph=G, size=10000))
     print(gs.random_walk_aggregation(graph=G, size=10000, metropolized=False))
 
@@ -45,12 +45,12 @@ def youtube_sampling_plot(size):
     :param size:
     :return:
     """
-    G = nx.read_edgelist("data/input/com-youtube.ungraph.txt", nodetype=int)
+    G = nx.read_edgelist("../data/input/com-youtube.ungraph.txt", nodetype=int)
     nodes = list(gs.random_walk(graph=G, size=size))
     graph = nx.Graph()
     graph.add_path(nodes)
     nx.draw_random(G=graph)
-    plt.savefig("data/output/com-youtube.ungraph.rw." + str(size) + ".png")
+    plt.savefig("../data/output/com-youtube.ungraph.rw." + str(size) + ".png")
     plt.show()
 
 
@@ -59,12 +59,12 @@ def amazon_sampling():
     amazon のグラフをサンプリングする
     :return:
     """
-    G = nx.read_edgelist("data/input/com-amazon.ungraph.txt")
+    G = nx.read_edgelist("../data/input/com-amazon.ungraph.txt")
     graph = nx.Graph()
     nodes = gs.random_walk(graph=G, size=10000)
     graph.add_path(nodes)
     json_graph.node_link_data(graph)
-    plt.savefig("data/output/com-amazon.ungraph.rw.png")
+    plt.savefig("../data/output/com-amazon.ungraph.rw.png")
     plt.show()
 
 
@@ -82,7 +82,7 @@ def sampling():
 
 def degree_distribution_plot():
     """ Plot Distribution """
-    G = nx.read_edgelist("data/input/com-amazon.ungraph.txt", nodetype=int, create_using=nx.DiGraph())
+    G = nx.read_edgelist("../data/input/com-amazon.ungraph.txt", nodetype=int, create_using=nx.DiGraph())
     indegree, outdegree = gs.degree_distribution(G)
 
     plt.plot(range(len(indegree)),indegree,'bo')
@@ -90,7 +90,7 @@ def degree_distribution_plot():
     plt.xscale('log')
     plt.ylabel('Freq')
     plt.xlabel('Degree')
-    plt.savefig('data/output/emain-Enron_distribution.png')
+    plt.savefig('../data/output/emain-Enron_distribution.png')
     plt.show()
 
 
