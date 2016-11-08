@@ -1,7 +1,5 @@
 # coding=utf-8
 
-from typing import *
-
 import itertools
 import networkx as nx
 import numpy as np
@@ -148,10 +146,9 @@ def random_walk_sampling_cca(graph, start_node=None, size=-1, metropolized=False
     return average
 
 
-def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False):
+def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False, tv=-1):
     """
-    RW, MHRWでサンプリングしたノード列について、クラスタ係数を100回計算し、
-    その平均と分散を返す
+    RW, MHRWでサンプリングしたノード列について、クラスタ係数を100回計算し、その平均と分散を返す
 
     :param graph: グラフ
     :param start_node: 先頭ノード
@@ -169,7 +166,8 @@ def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False)
     data = np.array(cluster_coefficient_average_result)
     average = np.average(data)
     var = np.var(data)
-    return {"average": average, "var": var}
+    nmse = abs(average - tv) / tv
+    return {"average": average, "var": var, "nmse": nmse}
 
 
 def degree_distribution(graph):
