@@ -130,12 +130,12 @@ def level4():
     print('\n---------- LEVEL4 ----------\n')
     G = nx.read_edgelist("../data/input/com-amazon.ungraph.txt")
     # グラフGをRWでサンプリングを行い、そのグラフのクラスタ係数を推定値をreturnする
-    print('Cluster coefficient of sampled graph by random walk (one times): {0}'.format(gs.random_walk_sampling_cca(graph=G, size=3000)))
+    print('Cluster coefficient of sampled graph by random walk (one times): {0}'.format(gs.random_walk_sampling_cca(graph=G, size=5000)))
     # グラフGをMHRWでサンプリングを行い、そのグラフのクラスタ係数を推定値をreturnする
-    print('Cluster coefficient of sampled graph by metropolis hasting random walk (one times): {0}'.format(gs.random_walk_sampling_cca(graph=G, size=3000, metropolized=True)))
+    print('Cluster coefficient of sampled graph by metropolis hasting random walk (one times): {0}'.format(gs.random_walk_sampling_cca(graph=G, size=5000, metropolized=True)))
     # 上記の関数を100回適応し、平均、分散、NMSEを出力する
-    print('Random Walk: {0}'.format(gs.random_walk_aggregation(G, size=3000)))
-    print('Metropolis hasting random walk: {0}'.format(gs.random_walk_aggregation(G, size=3000, metropolized=True)))
+    print('Random Walk: {0}'.format(gs.random_walk_aggregation(G, size=5000)))
+    print('Metropolis hasting random walk: {0}'.format(gs.random_walk_aggregation(G, size=5000, metropolized=True)))
 
 
 if __name__ == "__main__":
