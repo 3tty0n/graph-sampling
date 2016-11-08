@@ -187,3 +187,6 @@ def degree_distribution(graph):
     outdegree_distribution = np.bincount(outdegrees)
     return indegree_distribution, outdegree_distribution
 
+
+def random_walk_cc():
+    pass
