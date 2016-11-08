@@ -166,7 +166,7 @@ def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False,
     data = np.array(cluster_coefficient_average_result)
     average = np.average(data)
     var = np.var(data)
-    nmse = abs(average - tv) / tv
+    nmse = abs(average - tv) ** 2 / tv ** 2
     return {"average": average, "var": var, "nmse": nmse}
 
 
