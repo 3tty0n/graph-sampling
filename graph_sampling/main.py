@@ -121,23 +121,29 @@ def level3():
     print('bfs sampling nodes: {0}'.format(gs.bfs(G, 1, 4)))
     # グラフGをRWでサンプリングを行い、そのサンプリングノード列をreturnする
     G = nx.read_edgelist("../data/input/com-amazon.ungraph.txt")
-    print('random walk sampling of amazon graph: {0}'.format(list(gs.random_walk(graph=G, size=3000, metropolized=False))))
+    print('random walk sampling of amazon graph: {0}'
+          .format(list(gs.random_walk(graph=G, size=3000, metropolized=False))))
     # グラフGをMHRWでサンプリングを行い、そのサンプリングノード列をreturnする
-    print('Metropolis hasting randamo walk of amazon graph: {0}'.format(list(gs.random_walk(graph=G, size=3000, metropolized=True))))
+    print('Metropolis hasting random walk of amazon graph: {0}'
+          .format(list(gs.random_walk(graph=G, size=3000, metropolized=True))))
 
 
 def level4():
     print('\n---------- LEVEL4 ----------\n')
     G = nx.read_edgelist("../data/input/com-amazon.ungraph.txt")
     # グラフGをRWでサンプリングを行い、そのグラフのクラスタ係数を推定値をreturnする
-    print('Cluster coefficient of sampled graph by random walk (one times): {0}'.format(gs.random_walk_sampling_cca(graph=G, size=5000)))
+    print('Cluster coefficient of sampled graph' +
+          'by random walk (one time): {0}'.format(gs.random_walk_sampling_cca(graph=G, size=5000)))
     # グラフGをMHRWでサンプリングを行い、そのグラフのクラスタ係数を推定値をreturnする
-    print('Cluster coefficient of sampled graph by metropolis hasting random walk (one times): {0}'.format(gs.random_walk_sampling_cca(graph=G, size=5000, metropolized=True)))
+    print('Cluster coefficient of sampled graph' +
+          'by metropolis hasting random walk (one time): {0}'
+          .format(gs.random_walk_sampling_cca(graph=G, size=5000, metropolized=True)))
     # 上記の関数を100回適応し、平均、分散、NMSEを出力する
-    print('Random Walk: {0}'.format(gs.random_walk_aggregation(G, size=5000)))
-    print('Metropolis hasting random walk: {0}'.format(gs.random_walk_aggregation(G, size=5000, metropolized=True)))
+    print('Random Walk: {0}'
+          .format(gs.random_walk_aggregation(G, size=5000, tv=0.3967)))
+    print('Metropolis hasting random walk: {0}'
+          .format(gs.random_walk_aggregation(G, size=5000, metropolized=True, tv=0.3967)))
 
 
 if __name__ == "__main__":
-    level2()
     level4()
