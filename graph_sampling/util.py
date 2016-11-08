@@ -26,7 +26,7 @@ def complete_graph(n) -> nx.Graph:
     return G
 
 
-def complete_graph_show(graph, n):
+def complete_graph_show(n):
     """
     完全グラフを表示する
 
@@ -34,13 +34,13 @@ def complete_graph_show(graph, n):
     :param n: ノードの数
     :return:
     """
-    G = graph.complete_graph(n)
+    G = complete_graph(n)
     pos = nx.circular_layout(G)
     nx.draw_networkx(G, pos)
     plt.show()
 
 
-def cluster_coefficient_node(graph, v) -> float:
+def cluster_coefficient_node(graph, v):
     """
     graphのあるノードvのクラスタ係数を求める
 
@@ -51,7 +51,7 @@ def cluster_coefficient_node(graph, v) -> float:
     return nx.clustering(graph, v)
 
 
-def cluster_coefficient_average(graph) -> float:
+def cluster_coefficient_average(graph):
     """
     graphの平均クラスタ係数を求める
     :param graph: グラフ
@@ -60,7 +60,7 @@ def cluster_coefficient_average(graph) -> float:
     return nx.average_clustering(graph)
 
 
-def average_degree(graph) -> float:
+def average_degree(graph):
     """
     graphの平均次数を求める
     :param graph: グラフ
@@ -70,7 +70,7 @@ def average_degree(graph) -> float:
     return sum(values) / len(values)
 
 
-def bfs(graph, start, end) -> List[int]:
+def bfs(graph, start, end):
     """
     graphを幅優先探索する
 
@@ -98,7 +98,7 @@ def bfs(graph, start, end) -> List[int]:
     return visited
 
 
-def random_walk(graph, start_node=None, size=-1, metropolized=False) -> List[int]:
+def random_walk(graph, start_node=None, size=-1, metropolized=False):
     """
     RWでサンプリングしたノード列を返す
 
@@ -124,7 +124,7 @@ def random_walk(graph, start_node=None, size=-1, metropolized=False) -> List[int
         yield v
 
 
-def random_walk_sampling_cca(graph, start_node=None, size=-1, metropolized=False) -> List[int]:
+def random_walk_sampling_cca(graph, start_node=None, size=-1, metropolized=False):
     """
     RWでサンプリングしたグラフの平均クラスタ係数を返す
 
@@ -139,13 +139,16 @@ def random_walk_sampling_cca(graph, start_node=None, size=-1, metropolized=False
 
     nodes = list(random_walk(graph=graph, start_node=start_node, size=size, metropolized=metropolized))
 
-    graph = nx.Graph()
-    graph.add_path(nodes=nodes)
+    data = list()
+    for node in nodes:
+        data.append(cluster_coefficient_node(graph, node))
 
-    return cluster_coefficient_average(graph)
+    average = sum(data) / len(data)
+
+    return average
 
 
-def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False) -> List[int]:
+def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False):
     """
     RW, MHRWでサンプリングしたノード列について、クラスタ係数を100回計算し、
     その平均と分散を返す
@@ -171,7 +174,7 @@ def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False)
 
 def degree_distribution(graph):
     """
-    次数分布
+    次数分布の indegree, outdegree を return する
 
     :param graph: nx.Graph
     :return: indegree_distribution, outdegree_distribution

@@ -90,9 +90,54 @@ def degree_distribution_plot():
     plt.xscale('log')
     plt.ylabel('Freq')
     plt.xlabel('Degree')
-    plt.savefig('../data/output/emain-Enron_distribution.png')
+    plt.savefig('../data/output/com-amazon.ungraph.png')
     plt.show()
 
 
-if __name__ == "__main__":
+def level1():
+    print('\n---------- LEVEL 1 ---------\n')
+    # 次数10の完全グラフをプロットする
+    gs.complete_graph_show(10)
+    # グラフGのあるノードvのクラスタ係数をreturnする
+    G = gs.complete_graph(10)
+    v = 1
+    print('cluster coefficient of {0} is {1}'.format(v, gs.cluster_coefficient_node(G, v)))
+
+
+def level2():
+    print('\n---------- LEVEL2 ----------\n')
+    # グラフGの対数グラフをプロットする
     degree_distribution_plot()
+    # グラフGの平均クラスタ係数をreturnする
+    G = nx.Graph()
+    G.add_edges_from([(1, 2), (1, 3), (1, 4), (2, 5), (2, 6), (4, 7), (4, 8), (5, 9), (5, 10), (7, 11), (7, 12)])
+    print('average cluster coefficient of G is {0}'.format(gs.cluster_coefficient_average(G)))
+
+
+def level3():
+    print('\n---------- LEVEL3 ----------\n')
+    # グラフGを幅優先探索でサンプリングを行い、そのサンプリングノード列をreturnする
+    G = gs.complete_graph(10)
+    print('bfs sampling nodes: {0}'.format(gs.bfs(G, 1, 4)))
+    # グラフGをRWでサンプリングを行い、そのサンプリングノード列をreturnする
+    G = nx.read_edgelist("../data/input/com-amazon.ungraph.txt")
+    print('random walk sampling of amazon graph: {0}'.format(list(gs.random_walk(graph=G, size=3000, metropolized=False))))
+    # グラフGをMHRWでサンプリングを行い、そのサンプリングノード列をreturnする
+    print('Metropolis hasting randamo walk of amazon graph: {0}'.format(list(gs.random_walk(graph=G, size=3000, metropolized=True))))
+
+
+def level4():
+    print('\n---------- LEVEL4 ----------\n')
+    G = nx.read_edgelist("../data/input/com-amazon.ungraph.txt")
+    # グラフGをRWでサンプリングを行い、そのグラフのクラスタ係数を推定値をreturnする
+    print('Cluster coefficient of sampled graph by random walk (one times): {0}'.format(gs.random_walk_sampling_cca(graph=G, size=3000)))
+    # グラフGをMHRWでサンプリングを行い、そのグラフのクラスタ係数を推定値をreturnする
+    print('Cluster coefficient of sampled graph by metropolis hasting random walk (one times): {0}'.format(gs.random_walk_sampling_cca(graph=G, size=3000, metropolized=True)))
+    # 上記の関数を100回適応し、平均、分散、NMSEを出力する
+    print('Random Walk: {0}'.format(gs.random_walk_aggregation(G, size=3000)))
+    print('Metropolis hasting random walk: {0}'.format(gs.random_walk_aggregation(G, size=3000, metropolized=True)))
+
+
+if __name__ == "__main__":
+    level2()
+    level4()
