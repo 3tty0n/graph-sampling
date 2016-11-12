@@ -4,6 +4,7 @@ import itertools
 import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 import random
 
 
@@ -154,6 +155,7 @@ def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False,
     :param start_node: 先頭ノード
     :param size: サイズ
     :param metropolized: metropolis hasting random walk フラグ
+    "param tv: 真値
     :return: {average: 平均, var: 分散}
     """
     if start_node is None:
@@ -166,13 +168,25 @@ def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False,
     data = np.array(cluster_coefficient_average_result)
     average = np.average(data)
     var = np.var(data)
-    nmse = abs(average - tv) ** 2 / tv ** 2
+    nmse = normalized_mean_square_error(100, tv, cluster_coefficient_average_result)
     return {"average": average, "var": var, "nmse": nmse}
+
+
+def normalized_mean_square_error(n, true_value, results):
+    """
+    正規化された平均自乗誤差を計算する。
+    :param n: 試行回数
+    :param true_value: 真値
+    :param results: 結果を格納したリスト
+    :return: 正規化された平均自乗誤差
+    """
+    result_list = [(true_value - result) ** 2 for result in results]
+    return math.sqrt(sum(result_list) / n) / true_value
 
 
 def degree_distribution(graph):
     """
-    次数分布の indegree, outdegree を return する
+    次数分布の indegree, outdegree を計算する。
 
     :param graph: nx.Graph
     :return: indegree_distribution, outdegree_distribution
