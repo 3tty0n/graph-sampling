@@ -29,7 +29,6 @@ def complete_graph_show(n):
     """
     完全グラフを表示する
 
-    :param graph: グラフ
     :param n: ノードの数
     :return:
     """
