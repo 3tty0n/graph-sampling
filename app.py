@@ -1,10 +1,12 @@
 # coding=utf-8
 
 import json
+
+import flask
 import networkx as nx
 from networkx.readwrite import json_graph
+
 import util
-import flask
 
 
 def create_json_from_file(file):
