@@ -96,7 +96,29 @@ def bfs(graph, start, end):
     return visited
 
 
-def random_walk(graph, start_node=None, size=-1, metropolized=False):
+def normalized_mean_square_error(n, true_value, results):
+    """
+    正規化された平均自乗誤差を計算する。
+    :param n: 試行回数
+    :param true_value: 真値
+    :param results: 結果を格納したリスト
+    :return: 正規化された平均自乗誤差
+    """
+    result_list = [(true_value - result) ** 2 for result in results]
+    return math.sqrt(sum(result_list) / n) / true_value
+
+
+def page_rank(graph):
+    """
+    page rank アルゴリズムで計算したノード上位10個を返す
+    :param graph: nx.Graph
+    :return: [(id, value)]
+    """
+    pr = sorted(nx.pagerank(graph).items(), key=lambda x: x[1])
+    return pr[1:10]
+
+
+def random_walk(graph, start_node=None, size=-1, metropolized=False, pg=False):
     """
     RWでサンプリングしたノード列を返す
 
@@ -106,8 +128,11 @@ def random_walk(graph, start_node=None, size=-1, metropolized=False):
     :param metropolized: metropolis hasting random walk フラグ
     :return: サンプリングしたノード列
     """
-    if start_node is None:
-        start_node = random.choice(graph.nodes())
+    if pg is False:
+        if start_node is None:
+            start_node = random.choice(graph.nodes())
+    else:
+        start_node = page_rank(graph)[0][0]
 
     v = start_node
     for c in itertools.count():
@@ -122,7 +147,7 @@ def random_walk(graph, start_node=None, size=-1, metropolized=False):
         yield v
 
 
-def random_walk_sampling_cca(graph, start_node=None, size=-1, metropolized=False):
+def random_walk_sampling_cca(graph, start_node=None, size=-1, metropolized=False, pg=False):
     """
     RWでサンプリングしたグラフの平均クラスタ係数を返す
 
@@ -135,7 +160,7 @@ def random_walk_sampling_cca(graph, start_node=None, size=-1, metropolized=False
     if start_node is None:
         start_node = random.choice(graph.nodes())
 
-    nodes = list(random_walk(graph=graph, start_node=start_node, size=size, metropolized=metropolized))
+    nodes = list(random_walk(graph=graph, start_node=start_node, size=size, metropolized=metropolized, pg=pg))
 
     data = list()
     for node in nodes:
@@ -146,7 +171,7 @@ def random_walk_sampling_cca(graph, start_node=None, size=-1, metropolized=False
     return average
 
 
-def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False, tv=-1):
+def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False, tv=-1, pg=False):
     """
     RW, MHRWでサンプリングしたノード列について、クラスタ係数を100回計算し、その平均と分散を返す
 
@@ -160,27 +185,17 @@ def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False,
     if start_node is None:
         start_node = random.choice(graph.nodes())
 
-    cluster_coefficient_average_result = []
+    result = []
     for i in range(1, 100):
-        cluster_coefficient_average_result.append(random_walk_sampling_cca(graph, start_node, size, metropolized))
+        cca = random_walk_sampling_cca(graph, start_node, size, metropolized, pg)
+        print(cca)
+        result.append(cca)
 
-    data = np.array(cluster_coefficient_average_result)
+    data = np.array(result)
     average = np.average(data)
     var = np.var(data)
-    nmse = normalized_mean_square_error(100, tv, cluster_coefficient_average_result)
+    nmse = normalized_mean_square_error(100, tv, result)
     return {"average": average, "var": var, "nmse": nmse}
-
-
-def normalized_mean_square_error(n, true_value, results):
-    """
-    正規化された平均自乗誤差を計算する。
-    :param n: 試行回数
-    :param true_value: 真値
-    :param results: 結果を格納したリスト
-    :return: 正規化された平均自乗誤差
-    """
-    result_list = [(true_value - result) ** 2 for result in results]
-    return math.sqrt(sum(result_list) / n) / true_value
 
 
 def degree_distribution(graph):
