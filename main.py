@@ -4,6 +4,7 @@ from networkx.readwrite import json_graph
 import util
 import networkx as nx
 import matplotlib.pyplot as plt
+import random_walk_proposal as rp
 
 
 def ba10000_plot():
@@ -25,7 +26,7 @@ def twitter_sampling():
     """
     G = nx.read_edgelist("data/input/twitter_combined.txt", nodetype=int)
     print(util.cluster_coefficient_average(G))
-    print(util.random_walk_sampling_cca(graph=G, size=100000, metropolized=True))
+    print(util.random_walk_cca(graph=G, size=100000, metropolized=True))
     print(util.random_walk_aggregation(graph=G, size=10000, metropolized=True))
 
 
@@ -35,7 +36,7 @@ def youtube_sampling():
     :return:
     """
     G = nx.read_edgelist("data/input/com-youtube.ungraph.txt", nodetype=int)
-    print(util.random_walk_sampling_cca(graph=G, size=10000))
+    print(util.random_walk_cca(graph=G, size=10000))
     print(util.random_walk_aggregation(graph=G, size=10000, metropolized=False))
 
 
@@ -133,11 +134,11 @@ def level4():
     G = nx.read_edgelist("data/input/com-amazon.ungraph.txt")
     # グラフGをRWでサンプリングを行い、そのグラフのクラスタ係数を推定値をreturnする
     print('Cluster coefficient of sampled graph' +
-          'by random walk (one time): {0}'.format(util.random_walk_sampling_cca(graph=G, size=5000)))
+          'by random walk (one time): {0}'.format(util.random_walk_cca(graph=G, size=5000)))
     # グラフGをMHRWでサンプリングを行い、そのグラフのクラスタ係数を推定値をreturnする
     print('Cluster coefficient of sampled graph' +
           'by metropolis hasting random walk (one time): {0}'
-          .format(util.random_walk_sampling_cca(graph=G, size=5000, metropolized=True)))
+          .format(util.random_walk_cca(graph=G, size=5000, metropolized=True)))
     # 上記の関数を100回適応し、平均、分散、NMSEを出力する
     print('Random Walk: {0}'
           .format(util.random_walk_aggregation(G, size=5000, tv=0.3967)))
@@ -147,6 +148,5 @@ def level4():
 
 if __name__ == "__main__":
     G = nx.read_edgelist('data/input/com-amazon.ungraph.txt')
-    # print(list(gs.random_walk(graph=G, size=2000, pg=True)))
-    # print(util.random_walk_sampling_cca(G, size=2000, pg=True))
-    print(util.random_walk_aggregation(graph=G, size=2000, pg=True, tv=0.3967))
+    # print(util.random_walk_aggregation(graph=G, size=2000, pg=False, tv=0.3967))
+    print(util.random_walk_aggregation(graph=G, size=2000, metropolized=False, tv=0.3967))
