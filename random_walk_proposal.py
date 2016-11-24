@@ -53,40 +53,44 @@ def random_walk_proposal_aggregation(graph, start_node=None, size=-1, tv=1.0, n=
     return {"average": naverage, "var": var, "nmse": nmse}
 
 
-def cc_average_plot(graph, name):
+def cc_average_plot(graph, name, tv=None):
     import matplotlib.pyplot as plt
     num = [100, 200, 300, 500, 1000, 2000, 3000, 5000]
-    tv = [nx.average_clustering(graph)] * len(num)
+    if tv is None:
+        raise RuntimeError("true value is None.")
+    tvs = [tv] * len(num)
     metropolis = []
     proposal = []
     for n in num:
         proposal_average = random_walk_proposal_aggregation(
             graph=graph,
             size=n,
-            tv=tv[0],
+            tv=tv,
             n=100
         ).get("average")
         metropolis_average = random_walk_aggregation(
             graph=graph,
             size=n,
-            tv=tv[0],
+            tv=tv,
             metropolized=True,
             n=100
         ).get("average")
         proposal.append(proposal_average)
         metropolis.append(metropolis_average)
-    plt.title("Average of Cluster Coefficient Plotting" + name)
+    plt.title("Average of Cluster Coefficient Plotting - " + name)
     plt.xlabel("Sampled Size of the Graph")
     plt.ylabel("Average of Cluster Coefficient")
     plt.plot(num, proposal, label="proposal")
     plt.plot(num, metropolis, label="metropolis")
-    plt.plot(num, tv, label="true value")
+    plt.plot(num, tvs, label="true value")
     leg = plt.legend(loc="lower right")
     leg.get_frame().set_alpha(0.5)
-    plt.savefig("data/output/cc_" + name + "3.png")
+    plt.savefig("data/output/cc_" + name + "1.png")
     plt.show()
 
 
 if __name__ == '__main__':
-    G = nx.read_edgelist('data/input/com-amazon.ungraph.txt')
-    cc_average_plot(G, 'amazon')
+    amazon = nx.read_edgelist('data/input/com-amazon.ungraph.txt')
+    dblp = nx.read_edgelist('data/input/com-dblp.ungraph.txt')
+    enron = nx.read_edgelist('data/input/email-Enron.txt')
+    cc_average_plot(amazon, 'Amazon', 0.3967)
