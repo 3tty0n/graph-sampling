@@ -85,12 +85,17 @@ def cc_average_plot(graph, name, tv=None):
     plt.plot(num, tvs, label="true value")
     leg = plt.legend(loc="lower right")
     leg.get_frame().set_alpha(0.5)
-    plt.savefig("data/output/cc_" + name + "1.png")
+    plt.savefig("data/output/cc_" + name + "2.png")
     plt.show()
 
 
 if __name__ == '__main__':
     amazon = nx.read_edgelist('data/input/com-amazon.ungraph.txt')
-    dblp = nx.read_edgelist('data/input/com-dblp.ungraph.txt')
+    amazon_tv = 0.3967
     enron = nx.read_edgelist('data/input/email-Enron.txt')
-    cc_average_plot(amazon, 'Amazon', 0.3967)
+    enron_tv = 0.4970
+    youtube = nx.read_edgelist('data/input/com-youtube.ungraph.txt')
+    youtube_tv = 0.0808
+    facebook = nx.read_edgelist('data/input/facebook_combined.txt')
+    facebook_tv = 0.6055
+    cc_average_plot(facebook, 'Facebook', facebook_tv)
