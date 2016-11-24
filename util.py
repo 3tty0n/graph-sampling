@@ -114,11 +114,11 @@ def page_rank(graph):
     :param graph: nx.Graph
     :return: [(id, value)]
     """
-    pr = sorted(nx.pagerank(graph).items(), key=lambda x: x[1])
+    pr = sorted(nx.pagerank_numpy(graph, alpha=0.9).items(), key=lambda x: x[1])
     return pr[1:10]
 
 
-def random_walk(graph, start_node=None, size=-1, metropolized=False, pg=False):
+def random_walk(graph, start_node=None, size=-1, metropolized=False):
     """
     RWでサンプリングしたノード列を返す
 
@@ -128,11 +128,8 @@ def random_walk(graph, start_node=None, size=-1, metropolized=False, pg=False):
     :param metropolized: metropolis hasting random walk フラグ
     :return: サンプリングしたノード列
     """
-    if pg is False:
-        if start_node is None:
-            start_node = random.choice(graph.nodes())
-    else:
-        start_node = page_rank(graph)[0][0]
+    if start_node is None:
+        start_node = random.choice(graph.nodes())
 
     v = start_node
     for c in itertools.count():
@@ -147,7 +144,7 @@ def random_walk(graph, start_node=None, size=-1, metropolized=False, pg=False):
         yield v
 
 
-def random_walk_sampling_cca(graph, start_node=None, size=-1, metropolized=False, pg=False):
+def random_walk_cca(graph, start_node=None, size=-1, metropolized=False):
     """
     RWでサンプリングしたグラフの平均クラスタ係数を返す
 
@@ -157,21 +154,14 @@ def random_walk_sampling_cca(graph, start_node=None, size=-1, metropolized=False
     :param metropolized: metropolis hasting random walk フラグ
     :return: 平均クラスタ係数
     """
-    if start_node is None:
-        start_node = random.choice(graph.nodes())
-
-    nodes = list(random_walk(graph=graph, start_node=start_node, size=size, metropolized=metropolized, pg=pg))
-
+    nodes = list(random_walk(graph=graph, start_node=start_node, size=size, metropolized=metropolized))
     data = list()
     for node in nodes:
         data.append(cluster_coefficient_node(graph, node))
-
-    average = sum(data) / len(data)
-
-    return average
+    return sum(data) / len(data)
 
 
-def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False, tv=-1, pg=False):
+def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False, tv=-1, n=100):
     """
     RW, MHRWでサンプリングしたノード列について、クラスタ係数を100回計算し、その平均と分散を返す
 
@@ -187,8 +177,7 @@ def random_walk_aggregation(graph, start_node=None, size=-1, metropolized=False,
 
     result = []
     for i in range(1, 100):
-        cca = random_walk_sampling_cca(graph, start_node, size, metropolized, pg)
-        print(cca)
+        cca = random_walk_cca(graph, start_node, size, metropolized)
         result.append(cca)
 
     data = np.array(result)
@@ -216,5 +205,3 @@ def degree_distribution(graph):
     return indegree_distribution, outdegree_distribution
 
 
-def random_walk_cc():
-    pass
