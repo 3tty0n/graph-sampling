@@ -91,3 +91,5 @@ ENV/
 
 # InelliJ IDEA
 .idea
+
+data/output/
